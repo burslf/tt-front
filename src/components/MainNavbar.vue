@@ -1,19 +1,21 @@
 <template>
-  <q-toolbar class="relative bg-dark text-white q-py-xs" style="height: 70px">
+  <q-toolbar class="justify-between" style="height: 80px">
     <q-toolbar-title
+      :shrink="true"
       @click="() => router.push('/')"
-      style="cursor: pointer; height: 100%"
+      class="items-center flex"
+      style="cursor: pointer; height: 100%; max-width: 130px;"
     >
-      <img src="../../public/assets/logo.png" alt="" style="height: 100%" />
+      <img src="../../public/assets/logo.png" alt="" style="width: 100%" />
       <!-- <q-img src=" " style="height: 100%;" /> -->
     </q-toolbar-title>
 
     <div v-if="!mobileState" class="row items-center">
-      <q-tabs no-caps>
+      <q-tabs no-caps :content-class="'ueu'">
         <q-route-tab
-          v-if="wallet"
+          v-if="wallet.signer"
           name="raise-capital"
-          icon="fa-solid fa-sack-dollar"
+          icon="monetization_on"
           label="Raise Capital"
           exact
           to="/raise-capital"
@@ -27,7 +29,7 @@
       </q-tabs>
       <div>
         <q-btn
-          v-if="!wallet"
+          v-if="!wallet.signer"
           class="q-mx-sm"
           push
           no-caps
@@ -37,51 +39,71 @@
           @click="() => connectWallet()"
         />
       </div>
-      <div v-if="wallet" class="flex column" @click="confirm">
+      <div v-if="wallet.signer" class="flex column" @click="openMenu">
         <q-chip class="cursor-pointer">
-          <q-avatar>
-            <img src="https://cdn.quasar.dev/img/avatar5.jpg" />
-          </q-avatar>
-          {{ wallet.accountIds[0] }}
+          {{ concatAddress(wallet.signer) }}
         </q-chip>
       </div>
     </div>
 
-    <div v-if="mobileState">
+    <div v-if="mobileState" class="row items-center justify-end">
+      <div>
+        <q-btn
+          v-if="!wallet.signer"
+          class="q-mx-sm"
+          push
+          no-caps
+          color="secondary"
+          label="Connect"
+          icon="wallet"
+          @click="() => connectWallet()"
+        />
+      </div>
+      <div v-if="wallet.signer" class="flex column" @click="openMenu">
+        <q-chip class="cursor-pointer">
+          {{ concatAddress(wallet.signer) }}
+        </q-chip>
+      </div>
       <q-btn dense flat round icon="menu" @click="toggleDrawer()" />
     </div>
   </q-toolbar>
+
+  <ChipMenuDialog/>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import { ethers } from "ethers";
+
 import { useRouter } from "vue-router";
-import { HashConnect } from "hashconnect";
-import { useHashconnectStore } from "../stores/hashconnect-store";
+import { useWalletStore } from "../stores/wallet-store";
 import { useQuasar } from "quasar";
 import { useDrawerState, useScreenState } from "../stores/drawer-store";
 import { watch, onMounted } from "vue";
+import { useMenuDialogState } from '../stores/dialog-store';
+import { concatAddress, networkIdToName } from "../helpers/web3helpers";
+import ChipMenuDialog from "./ChipMenuDialog.vue";
 
+const $q = useQuasar();
+const router = useRouter();
+
+const { wallet, setWallet } = useWalletStore();
 const { drawerState, setDrawerState } = useDrawerState();
 const { mobileState, setMobileState } = useScreenState();
+const {setMenuDialog} = useMenuDialogState();
+
 const toggleDrawer = () => {
   setDrawerState(!drawerState.value);
 };
 
-const router = useRouter();
-const { wallet, setWallet } = useHashconnectStore();
-const hashconnect = new HashConnect();
-const hashMetadata = {
-  name: "ProCapial",
+const walletMetadata = {
+  name: "Ticketrust",
   description: "Put some description here",
-};
-let saveData = {
-  topic: "",
-  pairingString: "",
-  encryptionKey: "",
-  pairingData: [],
 };
 
 onMounted(() => {
+  
+  setupMetamaskEvents();
+
   const w = $q.screen.width;
   if (w < 800) {
     setMobileState(true);
@@ -90,68 +112,68 @@ onMounted(() => {
   }
 });
 
-const $q = useQuasar();
 
 const connectWallet = async () => {
-  setupHashConnectEvents();
+  const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);
+  const signer = provider.getSigner()
+
   const isLocalData = loadLocalData();
+
   if (!isLocalData) {
+    console.log(signer)
+    await provider.send("eth_requestAccounts", []);
+
+    const address = await signer.getAddress()
+    const network = await provider.getNetwork()
+    console.log(network)
+    wallet.value.signer = address
+    wallet.value.network.chainId = network.chainId
+    wallet.value.network.name = networkIdToName[network.chainId].name
+    wallet.value.network.logo = networkIdToName[network.chainId].logo
+    
+    localStorage.setItem('signer', JSON.stringify(wallet.value))
+
     // first init if no hashconnect data on localstorage
-    await hashconnect.init(hashMetadata, "mainnet", true);
-  } else {
-    //use loaded data for initialization + connection
-    await hashconnect.init(hashMetadata, "mainnet", true);
-    await hashconnect.connect(saveData.topic, saveData.pairedWalletData);
+    // await hashconnect.init(hashMetadata, "mainnet", true);
   }
 };
 
 const disconnectWallet = async () => {
-  hashconnect.clearConnectionsAndData();
-  setWallet(null);
+  // hashconnect.clearConnectionsAndData();
+  localStorage.removeItem("signer");
+  setWallet({...wallet.value, signer: null});
+  const provider = new ethers.providers.Web3Provider((window as never)['ethereum'])
+  const signer = provider.getSigner()
+  console.log(signer)
 };
 
 const loadLocalData = () => {
-  let foundData = localStorage.getItem("hashconnectData");
+  let foundData = localStorage.getItem("signer");
   if (foundData) {
-    saveData = JSON.parse(foundData);
+    setWallet(JSON.parse(foundData))
     return true;
   } else return false;
 };
 
-const setupHashConnectEvents = () => {
-  hashconnect.pairingEvent.once((pairingData) => {
-    setWallet(pairingData);
-  });
+const setupMetamaskEvents = () => {
+  const ethereum:any = (window as Window)['ethereum'];
 
-  hashconnect.foundExtensionEvent.once(async (walletMetadata) => {
-    if (saveData.pairingData.length == 0) {
-      hashconnect.connectToLocalWallet();
-    }
-  });
-
-  hashconnect.acknowledgeMessageEvent.once((acknowledgeData) => {
-    console.log("AKNOWLEDGE ", acknowledgeData);
-  });
-
-  hashconnect.connectionStatusChangeEvent.once((connectionStatus) => {
-    console.log("CONNECTION STATUS: ", connectionStatus);
-    if (connectionStatus === "Connected") {
-      if (saveData.pairingData.length > 0) {
-        setWallet(saveData.pairingData[0]);
+  ethereum.on('accountsChanged', async (accounts: never) => {
+    if (accounts && accounts[0]) {
+      if (accounts[0] !== wallet.value.signer){
+        setWallet({...wallet.value, signer: accounts[0]})
+        localStorage.setItem('signer', JSON.stringify(wallet.value))
       }
+    }else {
+       await disconnectWallet()
     }
+
   });
+
 };
 
-const confirm = () => {
-  $q.dialog({
-    title: "Logout",
-    message: "Would you like to logout?",
-    cancel: true,
-    persistent: true,
-  }).onOk(() => {
-    disconnectWallet();
-  });
+const openMenu = () => {
+  setMenuDialog(true)
 };
 
 watch(

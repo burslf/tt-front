@@ -1,0 +1,21 @@
+<template>
+    <q-dialog v-model="dialogState" transition-show="scale" transition-hide="scale">
+      <q-card style="width: 300px">
+        <q-card-section>
+          <div class="text-h6">Are you sure ?</div>
+        </q-card-section>
+
+
+        <q-card-actions align="right" class="bg-white">
+          <q-btn color="secondary" label="Logout" v-close-popup />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+</template>
+
+<script setup lang="ts">
+import { useDialogState } from '../stores/dialog-store';
+
+const { dialogState } = useDialogState();
+
+</script>

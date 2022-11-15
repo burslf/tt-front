@@ -32,7 +32,6 @@ import { useSelectedProject } from 'src/stores/selected-project';
 import { ref } from 'vue';
 
 const { exploreCards, setExploreCards } = useExploreState()
-const { setSelectedProject } = useSelectedProject()
 
 const cardsCount = ref(10)
 const router = useRouter()

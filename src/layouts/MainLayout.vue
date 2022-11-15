@@ -4,7 +4,7 @@
       <main-navbar />
     </q-header>
 
-    <q-drawer v-model="drawerState" side="left">
+    <q-drawer class="bg-accent" v-model="drawerState" side="left">
       <main-drawer />
     </q-drawer>
 
@@ -26,10 +26,7 @@
 <script setup>
 import mainNavbar from "components/MainNavbar.vue";
 import mainDrawer from "components/MainDrawer.vue";
-import { ref } from 'vue'
-import { useDrawerState } from '../stores/drawer-store';
+import { useDrawerState } from "../stores/drawer-store";
 
-
-const { drawerState } = useDrawerState()
-
+const { drawerState } = useDrawerState();
 </script>
