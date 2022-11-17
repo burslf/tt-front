@@ -27,20 +27,14 @@
 
     <div class="flex col-12 col-md-6 justify-center">
       <div
-        v-if="exploreCards.length > 0"
+        v-if="createdTickets.length > 0"
         class="flex items-start justify-around q-pa-sm"
       >
-        <RaiseCapitalCard
+        <CreatedTicketCard
           v-for="(card, index) in cardsToDisplay"
           :key="index"
           @click="() => navigateToProject(card, index)"
-          :artist-profile-file="card.artistProfileFile"
-          :album-file="card.albumFile"
-          :art-name="card.artName"
-          :date-countdown="card.dateCountdown"
-          :artist-name="card.artistName"
-          :amount="card.amount"
-          :percentage="card.percentage"
+          v-bind="card"
         />
       </div>
     </div>
@@ -48,27 +42,27 @@
 </template>
 
 <script setup>
-import RaiseCapitalCard from "src/components/RaiseCapitalCard.vue";
+import CreatedTicketCard from "src/components/CreatedTicketCard.vue";
 import { useRouter } from "vue-router";
-import { useExploreState } from "../stores/explore-store";
+import { useCreatedTickets } from "../stores/createdTickets-store";
 
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
-const { exploreCards, setExploreCards } = useExploreState();
+const { createdTickets } = useCreatedTickets();
 
 const router = useRouter();
 
 const cardsToDisplay = computed(() => {
-  if (exploreCards.value.length == 1) {
-    return [exploreCards.value[0]];
-  } else if (exploreCards.value.length > 1) {
-    return [exploreCards.value[0], exploreCards.value[1]];
+  if (createdTickets.value.length == 1) {
+    return [createdTickets.value[0]];
+  } else if (createdTickets.value.length > 1) {
+    return [createdTickets.value[0], createdTickets.value[1]];
   } else {
     return null;
   }
 });
 
 function navigateToProject(card, index) {
-  router.push({ path: `/project/${index}-${card.artName}` });
+  router.push({ path: `/event/${index}-${card.tx_hash}` });
 }
 </script>

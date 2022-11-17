@@ -1,8 +1,15 @@
-export const concatAddress = (address: string) => {
+import {formatDate} from './date';
+
+const concatAddress = (address: string) => {
     return `${address.substring(0,6)}...${address.substring(38,42)}`
 }
 
-export const networkIdToName = {
+const timestampToDate = (timestamp: string) => {
+    const date = new Date(Number(timestamp) * 1000)
+    return formatDate(date)
+}
+
+const networkIdToName = {
     1: {
         name: "ETHEREUM",
         currency: "ETH",
@@ -20,4 +27,10 @@ export const networkIdToName = {
 
     },
     
+}
+
+export {
+    concatAddress,
+    networkIdToName,
+    timestampToDate
 }

@@ -10,17 +10,17 @@ const routes = [
     children: [{ path: "", component: () => import("pages/ExplorePage.vue") }],
   },
   {
-    path: "/raise-capital",
+    path: "/create-event",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("pages/RaiseCapitalPage.vue") },
+      { path: "", component: () => import("pages/CreateEventPage.vue") },
     ],
   },
   {
-    path: "/project/:idname",
+    path: "/event/:idname",
     component: () => import("layouts/MainLayout.vue"),
     children: [
-      { path: "", component: () => import("src/pages/ProjectDetailsPage.vue") },
+      { path: "", component: () => import("src/pages/EventDetailPage.vue") },
     ],
   },
 

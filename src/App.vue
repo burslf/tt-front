@@ -17,15 +17,15 @@ import AOS from "aos";
 import "aos/dist/aos.css";
 import { useQuasar } from "quasar";
 import { ref, onMounted } from "vue";
-import { listUploads } from "./helpers/web3storage";
-import { useExploreState } from "./stores/explore-store";
-import { setCssVar } from "quasar";
+// import { listUploads } from "./helpers/web3storage";
+import { useCreatedTickets } from "./stores/createdTickets-store";
+// import { setCssVar } from "quasar";
 
 const $q = useQuasar();
 const visible = ref(true);
 const showSimulatedReturnData = ref(false);
 
-const { exploreCards, setExploreCards } = useExploreState();
+const { createdTickets, setCreatedTickets } = useCreatedTickets();
 
 $q.dark.set(true);
 
@@ -45,7 +45,7 @@ onMounted(() => {
 async function fetchCards() {
   // const exploreCards = await listUploads()
   // setExploreCards(exploreCards)
-  const allCards = exploreCards.value.reduce(
+  const allCards = createdTickets.value.reduce(
     (obj, item, i) => Object.assign(obj, { [i]: item }),
     {}
   );

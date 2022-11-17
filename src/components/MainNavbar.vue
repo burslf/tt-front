@@ -14,11 +14,11 @@
       <q-tabs no-caps :content-class="'ueu'">
         <q-route-tab
           v-if="wallet.signer"
-          name="raise-capital"
+          name="create-event"
           icon="monetization_on"
-          label="Raise Capital"
+          label="Create Event"
           exact
-          to="/raise-capital"
+          to="/create-event"
         />
         <q-route-tab
           name="explore"
@@ -115,14 +115,15 @@ onMounted(() => {
 
 const connectWallet = async () => {
   const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);
+  provider.provider['isExodus'] = false
   const signer = provider.getSigner()
 
   const isLocalData = loadLocalData();
 
   if (!isLocalData) {
-    console.log(signer)
     await provider.send("eth_requestAccounts", []);
-
+    // const signature = await signer.signMessage("Hello World");
+    // console.log(signature)
     const address = await signer.getAddress()
     const network = await provider.getNetwork()
     console.log(network)
