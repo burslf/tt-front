@@ -1,16 +1,16 @@
 import {ref} from 'vue';
 
-const dialogState = ref(false);
+const confirmDialogState = ref(false);
 const menuDialogState = ref(false);
 
-export const useDialogState = () => {
-  const setDialog = (bool: boolean) => {
-    dialogState.value = bool
+export const useConfirmDialogState = () => {
+  const setConfirmDialog = (bool: boolean) => {
+    confirmDialogState.value = bool
   }
 
   return {
-    dialogState,
-    setDialog
+    confirmDialogState,
+    setConfirmDialog
   }
 }
 

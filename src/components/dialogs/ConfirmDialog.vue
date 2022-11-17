@@ -1,5 +1,5 @@
 <template>
-    <q-dialog v-model="dialogState" transition-show="scale" transition-hide="scale">
+    <q-dialog v-model="confirmDialogState" transition-show="scale" transition-hide="scale">
       <q-card style="width: 300px">
         <q-card-section>
           <div class="text-h6">Are you sure ?</div>
@@ -14,8 +14,8 @@
 </template>
 
 <script setup lang="ts">
-import { useDialogState } from '../stores/dialog-store';
+import { useConfirmDialogState } from '../../stores/dialog-store';
 
-const { dialogState } = useDialogState();
+const { confirmDialogState } = useConfirmDialogState();
 
 </script>

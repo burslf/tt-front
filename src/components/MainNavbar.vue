@@ -81,7 +81,7 @@ import { useDrawerState, useScreenState } from "../stores/drawer-store";
 import { watch, onMounted } from "vue";
 import { useMenuDialogState } from '../stores/dialog-store';
 import { concatAddress, networkIdToName } from "../helpers/web3helpers";
-import ChipMenuDialog from "./ChipMenuDialog.vue";
+import ChipMenuDialog from "./dialogs/ChipMenuDialog.vue";
 
 const $q = useQuasar();
 const router = useRouter();
