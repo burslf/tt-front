@@ -3,12 +3,13 @@ import {CreateEventForm} from '../interfaces';
 
 const createEventForm:Ref<CreateEventForm> = ref<CreateEventForm>({
     eventName: "",
-    eventImage: [],
-    eventPrice: "",
-    ticketsTotal: "",
+    eventImage: null,
+    eventPrice: null,
+    ticketsTotal: null,
     eventDate: "",
-    optionsFees: "",
+    optionsFees: null,
     shares: [],
+    payees: [],
     greyMarketAllowed: false,
 })
 

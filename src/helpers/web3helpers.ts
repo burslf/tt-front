@@ -1,4 +1,4 @@
-import {formatDate} from './date';
+import {formatDate} from './utils';
 
 const concatAddress = (address: string) => {
     return `${address.substring(0,6)}...${address.substring(38,42)}`

@@ -20,12 +20,13 @@ interface CreatedTickets {
 
 interface CreateEventForm {
     eventName: string,
-    eventImage: File,
-    eventPrice: string,
-    ticketsTotal: string,
+    eventImage: File | null,
+    eventPrice: number | null,
+    ticketsTotal: number | null,
     eventDate: string,
-    optionsFees: string,
-    shares: [],
+    optionsFees: number | null,
+    payees: string[],
+    shares: number[],
     greyMarketAllowed: boolean,
 }
 
