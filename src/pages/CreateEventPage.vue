@@ -9,11 +9,19 @@
           <div class="flex column items-center">
             <div style="width: 90%; max-width: 700px">
               <q-file dense class="q-ma-sm" color="secondary" clearable filled v-model="createEventForm.eventImage"
-                label="Import" :rules="[val => !!val || 'Field is required']">
+                label="Import" :rules="[val => !!val || 'Field is required']"
+                @update:model-value="updateFile()">
                 <template v-slot:prepend>
                   <q-icon name="cloud_upload" />
                 </template>
               </q-file>
+              <div  v-if="imageUrl.length > 0" style="height: 300px; width: 100%;" class="flex justify-center">
+                <img
+                  :src="imageUrl"
+                  spinner-color="white"
+                  style="height: 100%; object-fit: contain;"
+                />
+              </div>
             </div>
           </div>
 
@@ -186,16 +194,22 @@ import { billeterieAddress } from '../contracts/contractAddress';
 import { billeterieABI } from '../contracts/contractABI';
 import { useSignerStore } from '../stores/wallet-store';
 import SplitShareInput from '../components/inputs/SplitShareInput.vue';
-import { toRaw, ref } from 'vue';
+import { toRaw, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
+import { useRouter } from 'vue-router';
 
 const step = ref(1);
 
 const $q = useQuasar()
+const imageUrl = ref('');
 
 const { signerState } = useSignerStore()
 const { createEventForm } = useCreateEventForm()
 const { createdTickets } = useCreatedTickets()
+
+onMounted(() => {
+  if (!signerState.value) useRouter().push('/')
+})
 
 const submitForm = async () => {
   $q.loading.show({
@@ -288,15 +302,10 @@ const addMetadataToIPFS = async (image: File, eventId: number) => {
   return offchainCID
 }
 
-function showLoading() {
-  $q.loading.show({
-    message: 'Some important process  is in progress. Hang on...'
-  })
-
-
-  $q.loading.hide()
-
+const updateFile = () => {
+    imageUrl.value = createEventForm.value.eventImage ? URL.createObjectURL(createEventForm.value.eventImage) : ''
 }
+
 </script>
 
 <style lang="scss">

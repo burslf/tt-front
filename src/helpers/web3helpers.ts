@@ -10,8 +10,8 @@ const timestampToDate = (timestamp: string) => {
 }
 
 const networkIdToName = {
-    1: {
-        name: "ETHEREUM",
+    5: {
+        name: "Goerli ETH",
         currency: "ETH",
         logo: 'eth'
     },

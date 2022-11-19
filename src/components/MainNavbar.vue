@@ -118,7 +118,7 @@ onMounted(() => {
 const connectWallet = async () => {
   const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);
   const signer = provider.getSigner()
-  const isLocalData = loadLocalData();
+  const isLocalData = await loadLocalData();
 
   if (!isLocalData) {
     await provider.send("eth_requestAccounts", []);
@@ -126,6 +126,7 @@ const connectWallet = async () => {
     // console.log(signature)
     const address = await signer.getAddress()
     const network = await provider.getNetwork()
+    console.log(network)
     wallet.value.address = address
     wallet.value.network.chainId = network.chainId
     wallet.value.network.name = networkIdToName[network.chainId].name
@@ -141,19 +142,26 @@ const connectWallet = async () => {
 const disconnectWallet = async () => {
   // hashconnect.clearConnectionsAndData();
   localStorage.removeItem("signer");
-  setWallet({...wallet.value, signer: null, address: null});
+  setWallet({...wallet.value, address: null});
   const provider = new ethers.providers.Web3Provider((window as never)['ethereum'])
   const signer = provider.getSigner()
   console.log(signer)
 };
 
-const loadLocalData = () => {
+const loadLocalData = async () => {
   let foundData = localStorage.getItem("signer");
   if (foundData) {
     setWallet(JSON.parse(foundData))
     const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);
     const signer = provider.getSigner()
+    const network = await provider.getNetwork()
+    setWallet({...wallet.value, network: {
+      chainId: network.chainId,
+      name: networkIdToName[network.chainId].name,
+      logo: networkIdToName[network.chainId].logo
+    }})
     setSigner(signer)
+
     return true;
   } else return false;
 };

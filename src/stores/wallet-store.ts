@@ -2,7 +2,6 @@ import { ethers } from "ethers";
 import { ref } from "vue";
 
 export interface SaveData {
-  signer: ethers.Signer | null
   address: string | null
   network: Network
 }
@@ -14,7 +13,6 @@ interface Network {
 }
 
 const wallet = ref<SaveData>({
-  signer: null,
   address: null,
   network: {
     name: null,
@@ -27,6 +25,7 @@ const signerState = ref<ethers.Signer|null>(null)
 
 export const useWalletStore = () => {
   const setWallet = (newWallet:SaveData) => {
+    console.log(newWallet)
     wallet.value = newWallet;
   };
   return { wallet, setWallet };
