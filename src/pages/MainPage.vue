@@ -63,6 +63,6 @@ const cardsToDisplay = computed(() => {
 });
 
 function navigateToProject(card, index) {
-  router.push({ path: `/event/${index}-${card.tx_hash}` });
+  router.push({ path: `/event/${card.event_id}-${card.tx_hash}` });
 }
 </script>

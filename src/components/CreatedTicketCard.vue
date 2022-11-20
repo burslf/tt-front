@@ -4,7 +4,7 @@
       <q-img :src="props.offchain_data.image" style="height: 210px">
         <div class="absolute-bottom flex items-center justify-between">
           <span class="text-h6">{{ props.offchain_data.name }}</span>
-          <!-- <span class="text-subtitle2">Reward: {{ props.percentage }}%</span> -->
+          <span class="text-h5 text-bold q-pa-sm" style="border: 1px solid;white"> {{ props.price }}$</span>
         </div>
       </q-img>
 
@@ -24,7 +24,7 @@
             stripe
             rounded
             size="20px"
-            :value="tickets_left / tickets_total"
+            :value="1- tickets_left / tickets_total"
             color="secondary"
           />
         </div>
@@ -45,22 +45,29 @@
 
 <script setup lang="ts">
 import { concatAddress } from '../helpers/web3helpers';
-import {OffchainData} from '../interfaces';
+import { OffchainData} from '../interfaces';
 import {timestampToDate} from '../helpers/web3helpers';
 
-const props = defineProps<{
-  id: number,
-  tx_hash: string,
-  event_id: number,
-  creator: string,
-  tickets_total: number,
-  tickets_left: number,
-  event_date: string,
-  options_fees: number,
-  offchain_data: OffchainData,
-  shares: [],
-  grey_market_allowed: boolean
-}>();
+interface CreatedTickets {
+    id: number
+    created_at: string
+    updated_at: string | null
+    tx_hash: string
+    indexed_chain_event_id: number
+    event_id: number
+    creator: string
+    tickets_total: number
+    tickets_left: number
+    price: number
+    event_date: number
+    options_fees: number
+    offchain_data: OffchainData
+    shares: [string[], number[]]
+    grey_market_allowed: boolean
+    network_id: number
+}
+
+const props = defineProps<CreatedTickets>();
 
 </script>
 

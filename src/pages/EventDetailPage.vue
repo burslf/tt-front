@@ -1,5 +1,5 @@
 <template>
-  <q-page class="flex row">
+  <q-page class="flex row" v-if="selectedProject">
     <div class="q-pa-lg col-xs-12 col-sm-7 col-md-7 col-lg-7">
       <div class="q-pa-lg" style="max-width: 500px">
         <q-img :ratio="1" :src="selectedProject.offchain_data.image">
@@ -28,9 +28,9 @@
             </div>
           </div>
           <div class="q-mt-xl q-mb-md">
-            <span class="text-subtitle1"
+            <span class="text-subtitle1 flex items-center"
               >Ticket price:
-              <span class="text-h6">{{ selectedProject.price }}$ </span>
+              <span class="text-h4 q-ml-md">{{ selectedProject.price }}$ </span>
             </span>
           </div>
           <div class="q-mb-md">
@@ -42,7 +42,7 @@
               stripe
               rounded
               size="20px"
-              :value="selectedProject.tickets_left / selectedProject.tickets_total"
+              :value="1- selectedProject.tickets_left / selectedProject.tickets_total"
               color="secondary"
             />
           </div>
@@ -62,7 +62,7 @@
   </q-page>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useSelectedProject } from "../stores/selected-project";
 import { useRoute } from "vue-router";
 import { concatAddress, timestampToDate } from "../helpers/web3helpers";
@@ -70,8 +70,9 @@ import { concatAddress, timestampToDate } from "../helpers/web3helpers";
 const route = useRoute();
 const { selectedProject, setSelectedProject } = useSelectedProject();
 
-const cardId = route.params.idname.split("-")[0];
-const cardsStorage = JSON.parse(localStorage.getItem("cards"));
+const cardId = (route.params.idname as string).split("-")[0];
+// eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+const cardsStorage = JSON.parse(localStorage.getItem("cards")!);
 
 setSelectedProject(cardsStorage[cardId]);
 </script>

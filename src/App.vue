@@ -43,10 +43,21 @@ onMounted(() => {
 });
 
 async function fetchCards() {
-  // const exploreCards = await listUploads()
-  // setExploreCards(exploreCards)
-  const allCards = createdTickets.value.reduce(
-    (obj, item, i) => Object.assign(obj, { [i]: item }),
+  const response = await fetch('https://cte09rkyrk.execute-api.us-east-1.amazonaws.com/develop/created_events?network_id=1')
+  const createdEventsJson = await response.json()
+  for (let createdEvent of createdEventsJson){
+    const offchainJson = await (await fetch(`https://${createdEvent.offchain_data}.ipfs.w3s.link/${createdEvent.event_id}.json`)).json()
+    const offchain_data = {
+      name: offchainJson.name,
+      image: `https://${offchainJson.image}.ipfs.w3s.link/${createdEvent.event_id}`
+    }
+    createdEvent.offchain_data = offchain_data
+  }
+  setCreatedTickets(createdEventsJson)
+  
+  console.log(createdEventsJson)
+  const allCards = createdEventsJson.reduce(
+    (obj, item) => Object.assign(obj, { [item['event_id']]: item }),
     {}
   );
   localStorage.setItem("cards", JSON.stringify(allCards));

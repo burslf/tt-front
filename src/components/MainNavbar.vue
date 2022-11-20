@@ -133,7 +133,7 @@ const connectWallet = async () => {
     wallet.value.network.logo = networkIdToName[network.chainId].logo
     
     setSigner(signer)
-
+    console.log(wallet.value)
     localStorage.setItem('signer', JSON.stringify(wallet.value))
 
   }
@@ -150,6 +150,7 @@ const disconnectWallet = async () => {
 
 const loadLocalData = async () => {
   let foundData = localStorage.getItem("signer");
+  console.log(foundData)
   if (foundData) {
     setWallet(JSON.parse(foundData))
     const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);

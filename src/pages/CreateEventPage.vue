@@ -107,80 +107,6 @@
     </div>
 
 
-
-    <!-- <div class="row items-start" style="width: 100%">  
-      <div class="flex justify-center col-12 col-md-5">
-        <div class="flex column" style="width: 70%">
-          <q-file class="q-ma-sm" color="secondary" clearable filled v-model="createEventForm.eventImage"
-            label="Pick profile image" :rules="[val => !!val || 'Field is required']">
-            <template v-slot:prepend>
-              <q-icon name="cloud_upload" />
-            </template>
-          </q-file>
-        </div>
-
-      </div>
-
-      <div class="flex justify-center col-12 col-md-7">
-        <div class="flex column" style="width: 70%">
-          <q-input color="secondary" class="q-ma-sm" filled v-model="createEventForm.eventName" label="Event Name"
-            :rules="[val => !!val || 'Field is required']" />
-
-          <q-input color="secondary" class="q-ma-sm" filled label="Date to countdown"
-            v-model="createEventForm.eventDate">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-date v-model="createEventForm.eventDate" mask="YYYY-MM-DD HH:mm">
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-date>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                  <q-time v-model="createEventForm.eventDate" mask="YYYY-MM-DD HH:mm" format24h>
-                    <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
-                    </div>
-                  </q-time>
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-          <div class="flex justify-between">
-            <q-input color="secondary" class="q-ma-sm" style="width:45%" filled v-model="createEventForm.eventPrice"
-              type="number" prefix="$" label="Event Price">
-              <template v-slot:append>
-                <q-avatar>
-                  <img src="https://cryptologos.cc/logos/usd-coin-usdc-logo.svg">
-                </q-avatar>
-              </template>
-            </q-input>
-            <q-input color="secondary" class="q-ma-sm" style="width:45%" filled v-model="createEventForm.optionsFees"
-              type="number" prefix="%" label="Options Fees (%)" />
-          </div>
-          <div class="flex justify-between items-center">
-            <div class="q-ma-sm">
-              <span class="text-h6">Grey Market Allowed</span>
-            </div>
-            <q-toggle v-model="createEventForm.greyMarketAllowed" color="accent" keep-color size="60px" />
-          </div>
-
-          <q-input color="secondary" type="number" class="q-ma-sm" filled v-model="createEventForm.ticketsTotal"
-            label="Event Total Tickets" :rules="[val => !!val || 'Field is required']" />
-
-
-
-        </div>
-      </div>
-    </div> -->
-
-
   </q-page>
 </template>
 
@@ -197,6 +123,8 @@ import SplitShareInput from '../components/inputs/SplitShareInput.vue';
 import { toRaw, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
+import { ethers } from 'ethers';
+import { TransactionResponse } from '@ethersproject/abstract-provider';
 
 const step = ref(1);
 
@@ -222,24 +150,27 @@ const submitForm = async () => {
   }
 
   try {
-    const metadataCID = await addMetadataToIPFS(createEventForm.value.eventImage, createdTickets.value.length)
     if (!signerState.value) {
       $q.loading.hide()
       $q.notify({ color: 'negative', message: 'No signer found for calling the contract function' })
       throw 'No signer found for calling the contract function'
     }
-
     const contractInfo: ContractInfo = {
       address: billeterieAddress,
       abi: billeterieABI,
       signer: toRaw(signerState.value)
     }
+
+    const billeterieInstance = new BilleterieInstance(contractInfo)
+
+    const totalTickets = await billeterieInstance.contract.functions['totalEvents']()
+  
+    const metadataCID = await addMetadataToIPFS(createEventForm.value.eventImage, totalTickets)
     $q.loading.hide()
     $q.loading.show({
       message: 'Calling contract...'
     })
 
-    const billeterieInstance = new BilleterieInstance(contractInfo)
 
     if (!createEventForm.value.shares || !createEventForm.value.ticketsTotal || !createEventForm.value.eventPrice || !createEventForm.value.eventDate) {
       $q.loading.hide()
@@ -258,7 +189,10 @@ const submitForm = async () => {
       supplyPriceDate: [createEventForm.value.ticketsTotal, createEventForm.value.eventPrice, dateToTimestamp]
     }
     try {
-      const result = await billeterieInstance.createEvent(createEventParams)
+      const result: TransactionResponse = await billeterieInstance.createEvent(createEventParams)
+      const receipt = await result.wait(2)
+      console.log(receipt)
+
       $q.loading.hide()
       $q.notify({
         color: 'positive',
@@ -266,12 +200,12 @@ const submitForm = async () => {
       })
     } catch (e) {
       $q.loading.hide()
-      $q.notify({ color: 'negative', message: e.message })
+      $q.notify({ color: 'negative', message: JSON.stringify(e) })
     }
 
   } catch (e) {
     $q.loading.hide()
-    $q.notify({ color: 'negative', message: e.message })
+    $q.notify({ color: 'negative', message: JSON.stringify(e) })
   }
 
 }

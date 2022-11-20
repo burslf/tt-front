@@ -4,7 +4,7 @@
       <main-navbar />
     </q-header>
 
-    <q-drawer class="bg-accent" v-model="drawerState" side="left">
+    <q-drawer class="bg-secondary" v-model="drawerState" side="left">
       <main-drawer />
     </q-drawer>
 

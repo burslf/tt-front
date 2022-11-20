@@ -4,9 +4,7 @@ import {CreatedTickets} from '../interfaces';
 
 const projectMockData = [...projectMock];
 
-const createdTickets = ref(projectMockData);
-
-
+const createdTickets = ref<CreatedTickets[]>([]);
 
 export const useCreatedTickets = () => {
   const setCreatedTickets = (cards: CreatedTickets[]) => {

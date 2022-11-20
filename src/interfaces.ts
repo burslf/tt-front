@@ -4,18 +4,22 @@ interface OffchainData {
 }
 
 interface CreatedTickets {
-    id: number,
-    tx_hash: string,
-    event_id: number,
-    creator: string,
-    price: string,
-    tickets_total: number,
-    tickets_left: number,
-    event_date: string,
-    options_fees: number,
-    offchain_data: OffchainData,
-    shares: [],
+    id: number
+    created_at: string
+    updated_at: string
+    tx_hash: string
+    indexed_chain_event_id: number
+    event_id: number
+    creator: string
+    tickets_total: number
+    tickets_left: number
+    price: number
+    event_date: number
+    options_fees: number
+    offchain_data: OffchainData
+    shares: [string[], number[]]
     grey_market_allowed: boolean
+    network_id: number
 }
 
 interface CreateEventForm {

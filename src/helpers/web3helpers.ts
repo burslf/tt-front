@@ -4,7 +4,7 @@ const concatAddress = (address: string) => {
     return `${address.substring(0,6)}...${address.substring(38,42)}`
 }
 
-const timestampToDate = (timestamp: string) => {
+const timestampToDate = (timestamp: number) => {
     const date = new Date(Number(timestamp) * 1000)
     return formatDate(date)
 }

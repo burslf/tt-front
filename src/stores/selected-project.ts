@@ -1,7 +1,8 @@
 import {ref} from 'vue';
-import projectMock from 'src/assets/projects.json';
+import projectMock from '../assets/projects.json';
+import { CreatedTickets } from '../interfaces';
 
-const selectedProject = ref(null);
+const selectedProject = ref<CreatedTickets | null>(null);
 
 
 export const useSelectedProject = () => {
