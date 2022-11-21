@@ -2,6 +2,7 @@ import {ref} from 'vue';
 
 const confirmDialogState = ref(false);
 const menuDialogState = ref(false);
+const buyTicketDialog = ref(false);
 
 export const useConfirmDialogState = () => {
   const setConfirmDialog = (bool: boolean) => {
@@ -22,5 +23,16 @@ export const useMenuDialogState = () => {
   return {
     menuDialogState,
     setMenuDialog
+  }
+}
+
+export const useBuyTicketDialogState = () => {
+  const setBuyTicketDialog = (bool: boolean) => {
+    buyTicketDialog.value = bool
+  }
+
+  return {
+    buyTicketDialog,
+    setBuyTicketDialog
   }
 }

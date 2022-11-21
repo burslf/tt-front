@@ -34,8 +34,14 @@ interface CreateEventForm {
     greyMarketAllowed: boolean,
 }
 
+interface BuyTicketForm {
+    amount: number
+    recipient: string
+}
+
 export type {
     OffchainData,
     CreatedTickets,
-    CreateEventForm
+    CreateEventForm,
+    BuyTicketForm
 }

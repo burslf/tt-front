@@ -102,8 +102,8 @@ const walletMetadata = {
   description: "Put some description here",
 };
 
-onMounted(() => {
-  
+onMounted(async () => {
+  await loadLocalData()
   setupMetamaskEvents();
 
   const w = $q.screen.width;

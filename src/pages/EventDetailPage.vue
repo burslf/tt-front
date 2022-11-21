@@ -54,11 +54,17 @@
           </div>
         </div>
         <div class="q-mt-xl">
-          <q-btn class="q-mr-sm q-mb-sm" label="Buy Ticket" color="secondary" />
+          <q-btn class="q-mr-sm q-mb-sm" label="Buy Ticket" color="secondary" 
+            @click="() => openBuyTicketDialog()"/>
           <q-btn class="q-mr-sm q-mb-sm" label="Learn More" color="primary" />
         </div>
       </div>
     </div>
+    
+    <BuyTicketDialog 
+      :event-name="selectedProject.offchain_data.name" 
+      :tickets-total="selectedProject.tickets_total" 
+      :tickets-left="selectedProject.tickets_left"/>
   </q-page>
 </template>
 
@@ -66,13 +72,22 @@
 import { useSelectedProject } from "../stores/selected-project";
 import { useRoute } from "vue-router";
 import { concatAddress, timestampToDate } from "../helpers/web3helpers";
+import { useBuyTicketDialogState } from "../stores/dialog-store";
+import BuyTicketDialog from "../components/dialogs/BuyTicketDialog.vue";
 
 const route = useRoute();
 const { selectedProject, setSelectedProject } = useSelectedProject();
+const { setBuyTicketDialog } = useBuyTicketDialogState()
 
 const cardId = (route.params.idname as string).split("-")[0];
 // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
 const cardsStorage = JSON.parse(localStorage.getItem("cards")!);
 
 setSelectedProject(cardsStorage[cardId]);
+
+const openBuyTicketDialog = () => {
+  console.log("hey")
+  setBuyTicketDialog(true)
+}
+
 </script>

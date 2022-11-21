@@ -190,6 +190,9 @@ const submitForm = async () => {
     }
     try {
       const result: TransactionResponse = await billeterieInstance.createEvent(createEventParams)
+      $q.loading.hide()
+      $q.loading.show({message: 'Waiting for 2 confirmation block...'})
+
       const receipt = await result.wait(2)
       console.log(receipt)
 
