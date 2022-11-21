@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@burslf/tt-contracts": "^0.0.9",
+    "@metamask/onboarding": "^1.0.1",
     "@quasar/extras": "^1.0.0",
     "@typescript-eslint/eslint-plugin": "^5.43.0",
     "@typescript-eslint/parser": "^5.43.0",

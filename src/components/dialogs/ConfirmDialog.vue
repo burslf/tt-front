@@ -7,7 +7,7 @@
 
 
         <q-card-actions align="right" class="bg-white">
-          <q-btn color="secondary" label="Logout" v-close-popup />
+          <q-btn color="secondary" label="Logout" v-close-popup @click="() => confirmFunction()"/>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -16,6 +16,6 @@
 <script setup lang="ts">
 import { useConfirmDialogState } from '../../stores/dialog-store';
 
-const { confirmDialogState } = useConfirmDialogState();
+const { confirmDialogState, confirmFunction } = useConfirmDialogState();
 
 </script>

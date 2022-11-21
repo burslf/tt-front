@@ -16,9 +16,10 @@
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { useQuasar } from "quasar";
-import { ref, onMounted } from "vue";
+import { ref, onMounted, watch } from "vue";
 // import { listUploads } from "./helpers/web3storage";
 import { useCreatedTickets } from "./stores/createdTickets-store";
+import { useScreenState } from "./stores/drawer-store";
 // import { setCssVar } from "quasar";
 
 const $q = useQuasar();
@@ -26,10 +27,27 @@ const visible = ref(true);
 const showSimulatedReturnData = ref(false);
 
 const { createdTickets, setCreatedTickets } = useCreatedTickets();
+const { mobileState, setMobileState } = useScreenState();
 
 $q.dark.set(true);
 
 onMounted(() => {
+  const w = $q.screen.width;
+  if (w < 800) {
+    setMobileState(true);
+  } else {
+    setMobileState(false);
+  }
+  watch(
+    () => $q.screen.width,
+    (w, oldW) => {
+      if (w < 800) {
+        setMobileState(true);
+      } else {
+        setMobileState(false);
+      }
+    }
+  );
   fetchCards()
     .then((r) => {
       visible.value = false;

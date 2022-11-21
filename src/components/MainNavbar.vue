@@ -68,28 +68,28 @@
     </div>
   </q-toolbar>
 
-  <ChipMenuDialog/>
+  <ChipMenuDialog :disconnect-wallet="() => disconnectWallet()"/>
 </template>
 
 <script setup lang="ts">
 import { ethers } from "ethers";
+import MetaMaskOnboarding from '@metamask/onboarding'
 
 import { useRouter } from "vue-router";
 import { useWalletStore, useSignerStore } from "../stores/wallet-store";
 import { useQuasar } from "quasar";
 import { useDrawerState, useScreenState } from "../stores/drawer-store";
-import { watch, onMounted } from "vue";
+import { onMounted } from "vue";
 import { useMenuDialogState } from '../stores/dialog-store';
 import { concatAddress, networkIdToName } from "../helpers/web3helpers";
 import ChipMenuDialog from "./dialogs/ChipMenuDialog.vue";
 
-const $q = useQuasar();
 const router = useRouter();
 
 const { wallet, setWallet } = useWalletStore();
-const {signerState, setSigner} = useSignerStore();
+const {setSigner} = useSignerStore();
 const { drawerState, setDrawerState } = useDrawerState();
-const { mobileState, setMobileState } = useScreenState();
+const { mobileState } = useScreenState();
 
 const {setMenuDialog} = useMenuDialogState();
 
@@ -97,29 +97,25 @@ const toggleDrawer = () => {
   setDrawerState(!drawerState.value);
 };
 
-const walletMetadata = {
-  name: "Ticketrust",
-  description: "Put some description here",
-};
+// const walletMetadata = {
+//   name: "Ticketrust",
+//   description: "Put some description here",
+// };
 
 onMounted(async () => {
   await loadLocalData()
   setupMetamaskEvents();
-
-  const w = $q.screen.width;
-  if (w < 800) {
-    setMobileState(true);
-  } else {
-    setMobileState(false);
-  }
 });
 
 
 const connectWallet = async () => {
+  if (!MetaMaskOnboarding.isMetaMaskInstalled()) {
+    window.open('https://metamask.app.link/dapp/ticketrust-vue.netlify.app')
+  }
   const provider = new ethers.providers.Web3Provider((window as never)['ethereum']);
   const signer = provider.getSigner()
   const isLocalData = await loadLocalData();
-
+  console.log("LOCAL DATA: ", isLocalData)
   if (!isLocalData) {
     await provider.send("eth_requestAccounts", []);
     // const signature = await signer.signMessage("Hello World");
@@ -188,14 +184,5 @@ const openMenu = () => {
   setMenuDialog(true)
 };
 
-watch(
-  () => $q.screen.width,
-  (w, oldW) => {
-    if (w < 800) {
-      setMobileState(true);
-    } else {
-      setMobileState(false);
-    }
-  }
-);
+
 </script>

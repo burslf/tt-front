@@ -1,6 +1,8 @@
 import {ref} from 'vue';
 
 const confirmDialogState = ref(false);
+const confirmFunction = ref(() => {console.log('To Implement')});
+
 const menuDialogState = ref(false);
 const buyTicketDialog = ref(false);
 
@@ -8,10 +10,15 @@ export const useConfirmDialogState = () => {
   const setConfirmDialog = (bool: boolean) => {
     confirmDialogState.value = bool
   }
+  const setConfirmFunction = (f) => {
+    confirmFunction.value = f
+  }
 
   return {
     confirmDialogState,
-    setConfirmDialog
+    setConfirmDialog,
+    confirmFunction,
+    setConfirmFunction
   }
 }
 

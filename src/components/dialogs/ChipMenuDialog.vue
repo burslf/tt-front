@@ -13,7 +13,7 @@
         <q-card-section style="height: 150px;" class="menu-btn row items-center justify-center">
             <q-btn class="q-mx-xs" color="secondary" @click="() => {}" icon="person" label="profile"/>
             <q-btn class="q-mx-xs" color="secondary" @click="() => {}" :icon="`img:/public/assets/${wallet.network.logo}.png`" :label="wallet.network.name!" />
-            <q-btn class="q-mx-xs" color="secondary" @click="() => setConfirmDialog(true)" icon="logout" label="Logout"/>
+            <q-btn class="q-mx-xs" color="secondary" @click="() => logout()" icon="logout" label="Logout"/>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -27,14 +27,25 @@ import ConfirmDialog from './ConfirmDialog.vue';
 import { useConfirmDialogState, useMenuDialogState } from '../../stores/dialog-store';
 import { useWalletStore } from '../../stores/wallet-store';
 
+const props = defineProps<{
+  disconnectWallet: () => void
+}>()
 type Position = "top" | "standard" | "right" | "bottom" | "left" | undefined 
 
-const { menuDialogState } = useMenuDialogState()
-const { setConfirmDialog } = useConfirmDialogState();
+const { menuDialogState, setMenuDialog } = useMenuDialogState()
+const { setConfirmDialog, setConfirmFunction } = useConfirmDialogState();
 const {wallet, setWallet} = useWalletStore()
 
 const position: Ref<Position> = ref<Position>('top')
 
+const logout = () => {
+    setConfirmFunction(() => { 
+    props.disconnectWallet();
+    setMenuDialog(false)
+    })
+  
+  setConfirmDialog(true)
+}
 
 </script>
 
