@@ -6,7 +6,7 @@
       class="items-center flex"
       style="cursor: pointer; height: 100%; max-width: 130px;"
     >
-      <img src="../../public/assets/logo.png" alt="" style="width: 100%" />
+      <img src="/assets/logo.png" alt="" style="width: 100%" />
       <!-- <q-img src=" " style="height: 100%;" /> -->
     </q-toolbar-title>
 
@@ -77,7 +77,6 @@ import MetaMaskOnboarding from '@metamask/onboarding'
 
 import { useRouter } from "vue-router";
 import { useWalletStore, useSignerStore } from "../stores/wallet-store";
-import { useQuasar } from "quasar";
 import { useDrawerState, useScreenState } from "../stores/drawer-store";
 import { onMounted } from "vue";
 import { useMenuDialogState } from '../stores/dialog-store';

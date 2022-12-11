@@ -116,15 +116,15 @@ export const billeterieABI = `[
       },
       {
         "indexed": false,
-        "internalType": "string",
-        "name": "url",
-        "type": "string"
-      },
-      {
-        "indexed": false,
         "internalType": "uint256",
         "name": "timestamp",
         "type": "uint256"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "url",
+        "type": "string"
       }
     ],
     "name": "OffchainDataUpdated",
@@ -133,12 +133,6 @@ export const billeterieABI = `[
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
       {
         "indexed": true,
         "internalType": "address",
@@ -170,12 +164,6 @@ export const billeterieABI = `[
   {
     "anonymous": false,
     "inputs": [
-      {
-        "indexed": true,
-        "internalType": "address",
-        "name": "creator",
-        "type": "address"
-      },
       {
         "indexed": true,
         "internalType": "address",
@@ -313,11 +301,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -340,11 +323,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "_id",
@@ -513,6 +491,25 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
+        "internalType": "address",
+        "name": "",
+        "type": "address"
+      }
+    ],
+    "name": "creatorTotalEvents",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -557,11 +554,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -585,11 +577,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "",
@@ -615,11 +602,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -644,11 +626,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -668,11 +645,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -689,25 +661,6 @@ export const billeterieABI = `[
         "internalType": "uint256[]",
         "name": "",
         "type": "uint256[]"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "name": "idOfEvent",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
       }
     ],
     "stateMutability": "view",
@@ -758,11 +711,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -789,11 +737,6 @@ export const billeterieABI = `[
       {
         "internalType": "address",
         "name": "_to",
-        "type": "address"
-      },
-      {
-        "internalType": "address",
-        "name": "_creator",
         "type": "address"
       },
       {
@@ -874,11 +817,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -934,11 +872,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -962,11 +895,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "_id",
@@ -992,11 +920,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "_id",
         "type": "uint256"
@@ -1014,11 +937,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "",
@@ -1043,11 +961,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "_creator",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "_id",
@@ -1220,11 +1133,6 @@ export const billeterieABI = `[
   {
     "inputs": [
       {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
-      {
         "internalType": "uint256",
         "name": "",
         "type": "uint256"
@@ -1279,25 +1187,6 @@ export const billeterieABI = `[
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      }
-    ],
-    "name": "totalCreatorEvents",
-    "outputs": [
-      {
-        "internalType": "uint256",
-        "name": "",
-        "type": "uint256"
-      }
-    ],
-    "stateMutability": "view",
-    "type": "function"
-  },
-  {
     "inputs": [],
     "name": "totalEvents",
     "outputs": [
@@ -1312,11 +1201,6 @@ export const billeterieABI = `[
   },
   {
     "inputs": [
-      {
-        "internalType": "address",
-        "name": "",
-        "type": "address"
-      },
       {
         "internalType": "uint256",
         "name": "",

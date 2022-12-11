@@ -32,29 +32,77 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from 'vue';
+import { onMounted, toRaw } from 'vue';
 import { useBuyTicketForm } from '../../stores/buyTicketForm-store';
 import { useBuyTicketDialogState } from "../../stores/dialog-store";
-import { useWalletStore } from '../../stores/wallet-store';
+import { useSignerStore, useWalletStore } from '../../stores/wallet-store';
+import { BilleterieInstance } from '@burslf/tt-contracts';
+import { ContractInfo, MintTicketParams } from '@burslf/tt-contracts/dist/types';
+import { QDialog, QCard, QToolbar, QToolbarTitle, QBtn, QInput, QCardSection, useQuasar } from 'quasar';
+import { billeterieABI } from '../../contracts/contractABI';
+import { billeterieAddress } from '../../contracts/contractAddress';
+import { useRouter } from 'vue-router';
 
 const props = defineProps<{
     eventName: string,
     ticketsLeft: number,
-    ticketsTotal: number
+    ticketsTotal: number,
+    eventId: number,
+    creator: string,
+    ticketPrice: string
 }>()
 
 const { buyTicketForm, setBuyTicketForm } = useBuyTicketForm()
 const { buyTicketDialog } = useBuyTicketDialogState()
 
 const {wallet} = useWalletStore()
+const {signerState} = useSignerStore()
+
+const $q = useQuasar()
+const $router = useRouter()
 
 onMounted(() => {
+    console.log(props.ticketsLeft)
     if (wallet.value.address) {
         buyTicketForm.value.recipient = wallet.value.address
     }
 })
 
 const buyTicket = async () => {
-    console.log("TO Implement")
+    console.log(props.eventId)
+    $q.loading.show()
+
+    if (!signerState.value) {
+        $q.loading.hide()
+        $q.notify({ color: 'negative', message: 'No signer found for calling the contract function' })
+        throw 'No signer found for calling the contract function'
+    }
+
+    const contractInfo: ContractInfo = {
+      address: billeterieAddress,
+      abi: billeterieABI,
+      signer: toRaw(signerState.value)
+    }
+    const mintTicketParams: MintTicketParams = {
+        amount: buyTicketForm.value.amount,
+        creator: props.creator,
+        eventId: props.eventId,
+        toAddress: buyTicketForm.value.recipient,
+        data: "0x",
+        value: Number(props.ticketPrice) * buyTicketForm.value.amount
+    }
+    console.log(mintTicketParams)
+    try {
+        const billeterieInstance = new BilleterieInstance(contractInfo)
+        const callMint = await billeterieInstance.mintTicket(mintTicketParams)
+        const receipt = await callMint.wait(1)
+        console.log(receipt)
+        $q.loading.hide()
+        $q.notify({ color: 'positive', message: JSON.stringify(receipt) })
+        // $router.go(0);
+    }catch(e) {
+        $q.notify({ color: 'negative', message: JSON.stringify(e) })
+        $q.loading.hide()
+    }
 }
 </script>

@@ -61,7 +61,7 @@ onMounted(() => {
 });
 
 async function fetchCards() {
-  const response = await fetch('https://cte09rkyrk.execute-api.us-east-1.amazonaws.com/develop/created_events?network_id=1')
+  const response = await fetch('https://aieg5hsvo9.execute-api.us-east-1.amazonaws.com/created-events/all')
   const createdEventsJson = await response.json()
   for (let createdEvent of createdEventsJson){
     const offchainJson = await (await fetch(`https://${createdEvent.offchain_data}.ipfs.w3s.link/${createdEvent.event_id}.json`)).json()

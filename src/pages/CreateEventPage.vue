@@ -34,17 +34,17 @@
         <q-step :name="2" color="accent" title="Fill rest of required informations" icon="create_new_folder"
           :done="step > 2">
           <!-- SELECT REST INPUT -->
-          <q-input dense color="secondary" class="q-ma-sm" filled v-model="createEventForm.eventName" label="Event Name"
+          <q-input dense color="accent" class="q-ma-sm" filled v-model="createEventForm.eventName" label="Event Name"
             :rules="[val => !!val || 'Field is required']" />
 
-          <q-input dense color="secondary" class="q-ma-sm" filled label="Date to countdown"
+          <q-input dense color="accent" class="q-ma-sm" filled label="Date to countdown"
             v-model="createEventForm.eventDate">
             <template v-slot:prepend>
               <q-icon name="event" class="cursor-pointer">
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-date v-model="createEventForm.eventDate" mask="YYYY-MM-DD HH:mm">
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
+                      <q-btn v-close-popup label="Close" color="accent" flat />
                     </div>
                   </q-date>
                 </q-popup-proxy>
@@ -56,7 +56,7 @@
                 <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                   <q-time v-model="createEventForm.eventDate" mask="YYYY-MM-DD HH:mm" format24h>
                     <div class="row items-center justify-end">
-                      <q-btn v-close-popup label="Close" color="primary" flat />
+                      <q-btn v-close-popup label="Close" color="accent" flat />
                     </div>
                   </q-time>
                 </q-popup-proxy>
@@ -164,7 +164,7 @@ const submitForm = async () => {
     const billeterieInstance = new BilleterieInstance(contractInfo)
 
     const totalTickets = await billeterieInstance.contract.functions['totalEvents']()
-  
+    console.log("TOTAL TICKETS: ", totalTickets)
     const metadataCID = await addMetadataToIPFS(createEventForm.value.eventImage, totalTickets)
     $q.loading.hide()
     $q.loading.show({
@@ -189,6 +189,7 @@ const submitForm = async () => {
       supplyPriceDate: [createEventForm.value.ticketsTotal, createEventForm.value.eventPrice, dateToTimestamp]
     }
     try {
+      console.log(createEventParams)
       const result: TransactionResponse = await billeterieInstance.createEvent(createEventParams)
       $q.loading.hide()
       $q.loading.show({message: 'Waiting for 2 confirmation block...'})

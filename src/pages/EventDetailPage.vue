@@ -64,7 +64,11 @@
     <BuyTicketDialog 
       :event-name="selectedProject.offchain_data.name" 
       :tickets-total="selectedProject.tickets_total" 
-      :tickets-left="selectedProject.tickets_left"/>
+      :tickets-left="selectedProject.tickets_left"
+      :event-id="selectedProject.event_id"
+      :creator="selectedProject.creator"
+      :ticket-price="selectedProject.price"      
+      />
   </q-page>
 </template>
 
@@ -86,7 +90,7 @@ const cardsStorage = JSON.parse(localStorage.getItem("cards")!);
 setSelectedProject(cardsStorage[cardId]);
 
 const openBuyTicketDialog = () => {
-  console.log("hey")
+  console.log(cardsStorage[cardId])
   setBuyTicketDialog(true)
 }
 

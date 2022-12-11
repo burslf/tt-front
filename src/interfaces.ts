@@ -13,7 +13,7 @@ interface CreatedTickets {
     creator: string
     tickets_total: number
     tickets_left: number
-    price: number
+    price: string
     event_date: number
     options_fees: number
     offchain_data: OffchainData
