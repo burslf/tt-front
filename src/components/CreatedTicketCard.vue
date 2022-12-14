@@ -49,22 +49,22 @@ import { OffchainData} from '../interfaces';
 import {timestampToDate} from '../helpers/web3helpers';
 
 interface CreatedTickets {
-    id: number
-    created_at: string
-    updated_at: string | null
+    _id: string
+    created_at: number
+    updated_at: number | null
     tx_hash: string
-    indexed_chain_event_id: number
+    indexed_chain_event_id: string
     event_id: number
     creator: string
     tickets_total: number
     tickets_left: number
-    price: number
+    price: string
     event_date: number
     options_fees: number
     offchain_data: OffchainData
-    shares: [string[], number[]]
+    shares: [string[], number[]] | null
     grey_market_allowed: boolean
-    network_id: number
+    network_id: string
 }
 
 const props = defineProps<CreatedTickets>();

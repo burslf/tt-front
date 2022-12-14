@@ -61,19 +61,11 @@ onMounted(() => {
 });
 
 async function fetchCards() {
-  const response = await fetch('https://aieg5hsvo9.execute-api.us-east-1.amazonaws.com/created-events/all')
+  const response = await fetch('https://dev-api.ticketrust.io/created-events/all')
   const createdEventsJson = await response.json()
-  for (let createdEvent of createdEventsJson){
-    const offchainJson = await (await fetch(`https://${createdEvent.offchain_data}.ipfs.w3s.link/${createdEvent.event_id}.json`)).json()
-    const offchain_data = {
-      name: offchainJson.name,
-      image: `https://${offchainJson.image}.ipfs.w3s.link/${createdEvent.event_id}`
-    }
-    createdEvent.offchain_data = offchain_data
-  }
   setCreatedTickets(createdEventsJson)
-  
   console.log(createdEventsJson)
+  
   const allCards = createdEventsJson.reduce(
     (obj, item) => Object.assign(obj, { [item['event_id']]: item }),
     {}

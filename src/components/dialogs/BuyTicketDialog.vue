@@ -42,6 +42,7 @@ import { QDialog, QCard, QToolbar, QToolbarTitle, QBtn, QInput, QCardSection, us
 import { billeterieABI } from '../../contracts/contractABI';
 import { billeterieAddress } from '../../contracts/contractAddress';
 import { useRouter } from 'vue-router';
+import { triggerBackendMonitor } from '../../services/triggerMonitor';
 
 const props = defineProps<{
     eventName: string,
@@ -85,7 +86,6 @@ const buyTicket = async () => {
     }
     const mintTicketParams: MintTicketParams = {
         amount: buyTicketForm.value.amount,
-        creator: props.creator,
         eventId: props.eventId,
         toAddress: buyTicketForm.value.recipient,
         data: "0x",
@@ -97,6 +97,8 @@ const buyTicket = async () => {
         const callMint = await billeterieInstance.mintTicket(mintTicketParams)
         const receipt = await callMint.wait(1)
         console.log(receipt)
+        await triggerBackendMonitor()
+
         $q.loading.hide()
         $q.notify({ color: 'positive', message: JSON.stringify(receipt) })
         // $router.go(0);

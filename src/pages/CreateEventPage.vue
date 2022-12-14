@@ -118,13 +118,13 @@ import { BilleterieInstance } from '@burslf/tt-contracts';
 import { ContractInfo, CreateEventParams } from '@burslf/tt-contracts/dist/types';
 import { billeterieAddress } from '../contracts/contractAddress';
 import { billeterieABI } from '../contracts/contractABI';
-import { useSignerStore } from '../stores/wallet-store';
+import { useSignerStore, useWalletStore } from '../stores/wallet-store';
 import SplitShareInput from '../components/inputs/SplitShareInput.vue';
 import { toRaw, ref, onMounted } from 'vue';
 import { useQuasar } from 'quasar';
 import { useRouter } from 'vue-router';
-import { ethers } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
+import { triggerBackendMonitor } from '../services/triggerMonitor';
 
 const step = ref(1);
 
@@ -133,7 +133,7 @@ const imageUrl = ref('');
 
 const { signerState } = useSignerStore()
 const { createEventForm } = useCreateEventForm()
-const { createdTickets } = useCreatedTickets()
+const {wallet} = useWalletStore()
 
 onMounted(() => {
   if (!signerState.value) useRouter().push('/')
@@ -197,6 +197,8 @@ const submitForm = async () => {
       const receipt = await result.wait(2)
       console.log(receipt)
 
+      await triggerBackendMonitor()
+
       $q.loading.hide()
       $q.notify({
         color: 'positive',
@@ -215,7 +217,7 @@ const submitForm = async () => {
 }
 
 const addMetadataToIPFS = async (image: File, eventId: number) => {
-  const WEB3_STORAGE_API_TOKEN = process.env['WEB3_STORAGE_API_TOKEN']
+  const WEB3_STORAGE_API_TOKEN = process.env['VUE_APP_WEB3_STORAGE_API_TOKEN']
   if (!WEB3_STORAGE_API_TOKEN) {
     throw 'Missing WEB3 STORAGE API TOKEN'
   }
